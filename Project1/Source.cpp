@@ -5,6 +5,10 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Transform.h"
+#include "Camera.h"
+
+#define WIDTH 800
+#define HEIGHT 600
 
 int main(int argc, char** argv) {
 	Display display(800, 600, "test");
@@ -19,6 +23,7 @@ int main(int argc, char** argv) {
 	Shader shader("./res/basicShader");
 	Mesh mesh(vertices, sizeof(vertices) / sizeof(vertices[0]));
 	Texture texture("./res/asteroid.jpg");
+	Camera camera(glm::vec3(0, 0, -3), 70.0f, (float)WIDTH / HEIGHT, 0.01f, 1000.0f);
 	Transform transform;
 
 	float counter = 0.0f;
@@ -34,12 +39,12 @@ int main(int argc, char** argv) {
 
 		// Scale
 		float cosCounter = cosf(counter);
-		transform.SetScale(glm::vec3(cosCounter, cosCounter, cosCounter));
+		//transform.SetScale(glm::vec3(cosCounter, cosCounter, cosCounter));
 
 		shader.Bind();
 		// Added later
 		texture.Bind(0);
-		shader.Update(transform);
+		shader.Update(transform, camera);
 
 		mesh.Draw();
 
