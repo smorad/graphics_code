@@ -1,4 +1,7 @@
 #include "Shader.h"
+#include "Transform.h"
+
+#include <glm/gtx/transform.hpp>
 
 #include<string>
 #include<fstream>
@@ -28,10 +31,18 @@ Shader::Shader(const std::string& fileName)
 
 	glValidateProgram(m_program);
 	CheckShaderError(m_program, GL_VALIDATE_STATUS, true, "Error: Program validation failure");
+
+	m_uniforms[TRANSFORM_U] = glGetUniformLocation(m_program, "transform");
 }
 
 void Shader::Bind() {
 	glUseProgram(m_program);
+}
+
+void Shader::Update(const Transform& transform) {
+
+	glm::mat4 model = transform.GetModel();
+	glUniformMatrix4fv(m_uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
 }
 
 static GLuint CreateShader(const std::string& text, GLenum shaderType) {
